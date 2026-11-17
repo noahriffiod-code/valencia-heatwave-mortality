@@ -44,8 +44,10 @@ params$normal_window <- 15
 # 3. Heatwaves and attributable warming
 # ---------------------------------------------------------------------------
 # Official 2026 heatwaves for mainland Spain and the Balearic Islands (AEMET,
-# note of 9 September 2026). Wave 4 is provisional in that note.
+# note of 9 September 2026). Wave 4 (2-7 September) is provisional in that
+# note and is excluded, as in the other sections of the paper.
 params$waves <- read.csv(data_path("heatwaves_aemet_2026.csv"))
+params$waves <- params$waves[params$waves$status != "provisional", ]
 params$waves$start <- as.Date(params$waves$start)
 params$waves$end   <- as.Date(params$waves$end)
 

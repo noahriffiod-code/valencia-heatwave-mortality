@@ -3,8 +3,8 @@
 Code and data for the mortality section of *[paper title]*, [authors], [journal, year].
 
 The analysis estimates, for the city of Valencia (840,792 inhabitants, ages
-20 and over), the deaths attributable to heat during the four official AEMET
-heatwaves of 2026 (20-27 June, 2-24 July, 28 July-20 August, 2-7 September),
+20 and over), the deaths attributable to heat during the three official AEMET
+heatwaves of summer 2026 (20-27 June, 2-24 July, 28 July-20 August),
 the part of these deaths attributable to climate change, and their cost.
 
 - **Exposure-response functions**: Masselot et al. (2023), city ES003C, five
@@ -33,10 +33,9 @@ the part of these deaths attributable to climate change, and their cost.
 | 1 | 20-27 Jun | 12.6 | 10.8 | 10.7 |
 | 2 | 2-24 Jul | 69.5 | 50.9 | 48.1 |
 | 3 | 28 Jul-20 Aug | 76.8 | 49.8 | 52.1 |
-| 4 | 2-7 Sep (provisional) | 8.6 | 8.0 | - |
-| Total | | 167.4 [147.8-187.0] | 119.4 [101.6-137.0] | 110.8 [75.5-137.5] (waves 1-3) |
+| Total | | 158.8 [140.6-177.3] | 111.5 [93.7-129.0] | 110.8 [75.5-137.5] |
 
-Climate change, waves 1-3: 1,230 years of life lost; 210.6 million EUR
+Climate change: 1,230 years of life lost; 210.6 million EUR
 [143.5-261.2] with the Spanish VSL. Method A: 122.3 deaths [82.9-151.6].
 Full tables are written to `output/`.
 
@@ -151,16 +150,16 @@ Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
     European values 2021) and are not converted to 2026 euros.
 11. **Heatwaves.** Official AEMET waves for mainland Spain and the Balearic
     Islands (at least 10% of reference stations above the 95th percentile of
-    July-August Tmax 1971-2000 for at least 3 consecutive days). Wave 4 is
-    provisional. Days between waves are not counted.
+    July-August Tmax 1971-2000 for at least 3 consecutive days). Wave 4
+    (2-7 September) is provisional in the AEMET note and is excluded, as in
+    the other sections of the paper. Days between waves are not counted.
 12. **Close waves.** Forward windows overlap (wave 1 to 18 July, wave 2 to
     14 August). There is no double counting: each heat day receives
     AF<sub>t</sub>/22 of the deaths of each of the 22 following days, which
     is the calculation of `attrdl()` on the whole series restricted to
     heatwave days.
-13. **September.** Barnes et al. publish the attributable warming for June
-    to August only. The climate change part is therefore not computed for
-    wave 4, and its total covers waves 1-3.
+13. **Months.** Barnes et al. publish the attributable warming for June to
+    August, the months of the three waves retained.
 
 ## License
 
