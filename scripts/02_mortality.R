@@ -15,15 +15,14 @@
 #      Masselot et al. (2023) and Barnes et al. (2026);
 #   B. observed daily deaths of the province (MoMo) scaled to the city.
 #
-# Three indicators:
+# Two indicators:
 #   heat     deaths attributable to temperatures above the MMT;
-#   normal   heat deaths minus those with the 2016-2025 normal temperature;
 #   cc       heat deaths minus those without climate change.
 #
-# Results are printed and written to output/.
+# Results are printed and written to output/, with Figures 1 and 2 of the
+# paper.
 
 library(dlnm)
-library(splines)
 library(MASS)
 source("R/parameters.R")
 source("R/attrdl.R")
@@ -103,7 +102,7 @@ delta_sd <- ifelse(has_delta, (params$delta$delta_high[k] - params$delta$delta_l
 t_nocc   <- t_obs - delta_c
 cc_ok    <- tapply(has_delta[hw], hw_v, all)
 
-# Normal: mean of the same calendar window in 2016-2025
+# Normal: mean of the same calendar window in 2016-2025 (Figure 1 only)
 doy <- function(d) as.numeric(format(d, "%j"))
 ref <- temp[format(temp$date, "%Y") %in% params$normal_years, ]
 t_normal <- sapply(win$date, function(d) {
@@ -140,8 +139,7 @@ deaths_A <- matrix(deaths_base, nrow(win), nage, byrow = TRUE, dimnames = list(N
 # the same rates.
 read_momo <- function(f) {
   m <- read.csv(data_path("momo", f), sep = ";")
-  data.frame(date = as.Date(m$fecha, "%d/%m/%Y"), observed = m$defunciones_observadas,
-             excess = m$exceso_todas_causas, temperature = m$atribuibles_temperatura)
+  data.frame(date = as.Date(m$fecha, "%d/%m/%Y"), observed = m$defunciones_observadas)
 }
 momo <- lapply(params$files_momo, read_momo)
 share_20_44 <- with(bands, sum(deaths[start >= 20 & start < 45]) / sum(deaths[start >= 15 & start < 45]))
@@ -172,9 +170,8 @@ heat_deaths <- function(t, deaths, coef, mmt)
 
 indicators <- function(deaths, coef, mmt, t_cf) {
   heat <- heat_deaths(t_obs, deaths, coef, mmt)
-  list(heat   = heat,
-       normal = heat - heat_deaths(t_normal, deaths, coef, mmt),
-       cc     = heat - heat_deaths(t_cf, deaths, coef, mmt))
+  list(heat = heat,
+       cc   = heat - heat_deaths(t_cf, deaths, coef, mmt))
 }
 
 # Totals by wave, in deaths or in years of life lost. The climate change
@@ -207,8 +204,7 @@ draws <- replicate(params$nsim, {
 # ---------------------------------------------------------------------------
 # 5. Results
 # ---------------------------------------------------------------------------
-ind_names <- c(heat = "heat-related deaths", normal = "excess over normal temperature",
-               cc = "attributable to climate change")
+ind_names <- c(heat = "heat-related deaths", cc = "attributable to climate change")
 rows <- c(wave_id, "Total")
 
 results <- do.call(rbind, lapply(names(methods), function(m) {
@@ -221,7 +217,7 @@ results <- do.call(rbind, lapply(names(methods), function(m) {
              deaths = est, low = ci[, 1], high = ci[, 2], yll = yll, row.names = NULL)
 }))
 
-r <- results[results$indicator != "heat", ]
+r <- results[results$indicator == "cc", ]
 costs <- with(r, data.frame(method, indicator, wave,
                             vsl_spain      = deaths * params$vsl_spain,
                             vsl_spain_low  = low * params$vsl_spain,
@@ -269,7 +265,6 @@ scaling <- t(sapply(names(methods), function(m) {
   scaled <- sum((central[[m]]$cc * rr_nocc)[keep, ])
   c(convention = conv, scaled = scaled, change_pct = 100 * (scaled / conv - 1))
 }))
-heat_share <- 100 * sum(central$B$heat) / sum(deaths_B)
 
 write.csv(summary_waves, output_path("waves.csv"), row.names = FALSE)
 write.csv(results, output_path("deaths_by_wave.csv"), row.names = FALSE)
@@ -280,7 +275,10 @@ write.csv(scaling, output_path("sensitivity_equal_deaths.csv"))
 
 cat("\nCity of Valencia,", params$pop_city, "inhabitants, ages 20+\n\n")
 print(summary_waves, row.names = FALSE)
-cat("\nDays above the 1990-2019 maximum (", max(tdist), "degC):", sum(t_obs[hw] > max(tdist)), "\n")
+above_max <- t_obs[hw] > max(tdist)
+cat("\nDays above the 1990-2019 maximum (", max(tdist), "degC):", sum(above_max),
+    "| deaths attributable to climate change on these days (B):",
+    round(sum(central$B$cc[above_max & has_delta[hw], ]), 1), "\n")
 cat("MMT by age (degC):", paste(agelabs, round(mmt, 1), collapse = " | "), "\n")
 for (m in names(methods)) for (ind in names(ind_names)) {
   cat("\n", m, ": ", ind_names[ind], "\n", sep = "")
@@ -291,27 +289,36 @@ cat("\nCost, million EUR\n")
 print(format(costs, digits = 1, nsmall = 1), row.names = FALSE)
 cat("\nBy age\n")
 print(round(by_age, 2))
-cat("\nMoMo, city, all ages\n")
-print(format(momo_tab, digits = 1, nsmall = 1), row.names = FALSE)
 cat("\nScaled deaths in the world without climate change (waves with a delta)\n")
 print(round(scaling, 1))
-cat(sprintf("Heat-related deaths, all waves (B): %.1f%% of deaths from %s to %s\n",
-            heat_share, format(min(win$date), "%d/%m"), format(max(win$date), "%d/%m")))
+
 
 # ---------------------------------------------------------------------------
-# 6. Figure: exposure-response functions and heatwave temperatures
+# 6. Figures 1 and 2 of the paper
 # ---------------------------------------------------------------------------
-xs <- seq(min(tdist), max(tdist), by = 0.1)
-rr <- sapply(agelabs, function(a)
-  crosspred(do.call(onebasis, c(list(x = xs), argvar)), coef = coef_age[[a]], vcov = vcov_age[[a]],
-            model.link = "log", cen = mmt[a], at = xs)$allRRfit)
-png(output_path("exposure_response.png"), width = 2000, height = 1400, res = 250)
-matplot(xs, rr, type = "l", lty = 1, lwd = 2, col = 1:nage, log = "y",
-        xlab = "Daily mean temperature (degC)", ylab = "Relative risk, lag 0-21",
-        main = "Valencia (ES003C), Masselot et al. 2023")
-abline(h = 1, lty = 3)
-abline(v = mmt, col = 1:nage, lty = 2)
-legend("topleft", agelabs, col = 1:nage, lwd = 2, bty = "n")
-rug(t_obs[hw], col = "firebrick", lwd = 2)
-rug(t_nocc[hw][has_delta[hw]], col = "steelblue", lwd = 2)
+# Figure 1: daily mean temperature on heatwave days, observed, normal
+# 2016-2025 and without climate change.
+png(output_path("figure1_temperatures.png"), width = 2400, height = 950, res = 250)
+par(mfrow = c(1, nrow(waves)), mar = c(3, 2, 2, 0.5), oma = c(2, 2.5, 0, 0))
+for (v in wave_id) {
+  i <- hw[hw_v == v]
+  plot(win$date[i], t_obs[i], type = "o", pch = 16, cex = 0.5, ylim = c(22, 34),
+       xlab = "", ylab = "", main = paste("Heat wave", sub("V", "", v)))
+  lines(win$date[i], t_normal[i], col = "grey55", lwd = 2)
+  if (cc_ok[v]) lines(win$date[i], t_nocc[i], type = "o", pch = 16, cex = 0.5, col = "steelblue")
+}
+mtext("Daily mean temperature (degC)", side = 2, outer = TRUE, line = 1)
+legend("bottomright", c("Observed", "Normal 2016-2025", "Without climate change"),
+       col = c("black", "grey55", "steelblue"), lwd = 2, bty = "n", cex = 0.8)
+invisible(dev.off())
+
+# Figure 2: (a) deaths attributable to climate change per heatwave day,
+# (b) by age group over the three waves (method B).
+png(output_path("figure2_deaths.png"), width = 2400, height = 950, res = 250)
+par(mfrow = c(1, 2), mar = c(4, 4.5, 2, 0.5))
+barplot(daily$cc_B, names.arg = format(daily$date, "%d/%m"), las = 2, cex.names = 0.5,
+        col = "firebrick", border = NA, ylab = "Deaths per day", main = "a")
+b <- barplot(by_age["cc_deaths_B", ], col = "firebrick", border = NA, ylim = c(0, 62),
+             xlab = "Age group (years)", ylab = "Deaths", main = "b")
+text(b, by_age["cc_deaths_B", ] + 3, sprintf("%.1f", by_age["cc_deaths_B", ]), cex = 0.8)
 invisible(dev.off())
