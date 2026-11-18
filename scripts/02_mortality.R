@@ -255,19 +255,6 @@ daily <- data.frame(wave = hw_v, date = win$date[hw], t_obs = round(t_obs[hw], 1
                     cc_A = ifelse(has_delta[hw], round(rowSums(central$A$cc), 2), NA),
                     cc_B = ifelse(has_delta[hw], round(rowSums(central$B$cc), 2), NA))
 
-# MoMo, all ages, city: heatwave days, then forward windows (wave + 21 days).
-# The windows of close waves overlap; the total is taken on their union.
-momo_all <- c(list("0-14" = read_momo(params$file_momo_0_14), "15-44" = momo[["20-44"]]), momo[-1])
-momo_sum <- function(dates) share_city * sapply(c("observed", "excess", "temperature"), function(col)
-  sum(sapply(momo_all, function(m) sum(m[[col]][m$date %in% dates]))))
-days_v <- lapply(seq_len(nrow(waves)), function(i) seq(waves$start[i], waves$end[i], by = "day"))
-fwd_v  <- lapply(seq_len(nrow(waves)), function(i) seq(waves$start[i], waves$end[i] + maxlag, by = "day"))
-momo_tab <- rbind(
-  data.frame(period = "heatwave days", wave = rows,
-             rbind(t(sapply(days_v, momo_sum)), momo_sum(do.call(c, days_v)))),
-  data.frame(period = "forward window", wave = rows,
-             rbind(t(sapply(fwd_v, momo_sum)), momo_sum(unique(do.call(c, fwd_v))))))
-
 # Sensitivity to the equal-deaths convention: if deaths in the world without
 # climate change are scaled by RR(T_nocc) / RR(T), the climate change result
 # becomes the convention times RR(T_nocc), day by day and age by age.
@@ -289,7 +276,6 @@ write.csv(results, output_path("deaths_by_wave.csv"), row.names = FALSE)
 write.csv(costs, output_path("costs_by_wave_million_eur.csv"), row.names = FALSE)
 write.csv(round(by_age, 3), output_path("by_age.csv"))
 write.csv(daily, output_path("daily_heatwave_days.csv"), row.names = FALSE)
-write.csv(momo_tab, output_path("momo_city_all_ages.csv"), row.names = FALSE)
 write.csv(scaling, output_path("sensitivity_equal_deaths.csv"))
 
 cat("\nCity of Valencia,", params$pop_city, "inhabitants, ages 20+\n\n")

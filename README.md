@@ -1,8 +1,8 @@
 # Heat-related mortality during the 2026 heatwaves in Valencia attributable to climate change
 
-Code and data for the mortality section of *[paper title]*, [authors], [journal, year].
+Code and data for the mortality section of *Attributing the economic cost of the summer 2026 heat waves in València to climate change*, N. Riffiod, A.G. Fernández-Garza, D. Ávila-Velásquez, E. Gielen and M. Pulido-Velazquez (2026).
 
-The analysis estimates, for the city of Valencia (840,792 inhabitants, ages
+The analysis estimates, for the city of Valencia (858,178 inhabitants, ages
 20 and over), the deaths attributable to heat during the three official AEMET
 heatwaves of summer 2026 (20-27 June, 2-24 July, 28 July-20 August),
 the part of these deaths attributable to climate change, and their cost.
@@ -36,7 +36,7 @@ the part of these deaths attributable to climate change, and their cost.
 | Total | | 158.8 [140.6-177.3] | 111.5 [93.7-129.0] | 110.8 [75.5-137.5] |
 
 Climate change: 1,230 years of life lost; 210.6 million EUR
-[143.5-261.2] with the Spanish VSL. Method A: 122.3 deaths [82.9-151.6].
+[143.5-261.2] with the Spanish VSL. Method A: 124.8 deaths [84.6-154.7].
 Full tables are written to `output/`.
 
 ## Running the code
@@ -78,10 +78,11 @@ output/                            results (created by the scripts)
 | `era5land_valencia_calibrated.csv` | Same, calibrated on `era5_ES003C.csv` | `scripts/01_prepare_temperature.R` |
 | `momo/momo_valencia_province_*.csv` | Daily observed deaths, expected deaths, excess and deaths attributed to temperature, province of Valencia, by age group, to 30 September 2026 | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in Leon-Gomez et al. (2022) |
 | `heatwaves_aemet_2026.csv` | Dates of the 2026 heatwaves | AEMET, note of 9 September 2026, [link](https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026) |
-| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228327](https://doi.org/10.5281/zenodo.22228327), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
+| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
 
-Population of the city and the province on 1 January 2025: Real Decreto
-1117/2025. Monetary values: see `R/parameters.R` (Abellan Perpinan et al. 2023;
+Population of the city on 1 January 2026 (provisional municipal register,
+Ajuntament de Valencia, 9 May 2026) and of the province on 1 April 2026 (INE,
+Estadistica Continua de Poblacion). Monetary values: see `R/parameters.R` (Abellan Perpinan et al. 2023;
 Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
 
 ### Data sources and licences
@@ -192,7 +193,7 @@ Raju, E., Theokritoff, E., Mistry, M., Gasparrini, A., Otto, F.,
 Vicedo-Cabrera, A. M., Konstantinoudis, G. (2026). Heat-related urban
 mortality attributable to human-induced climate change in Europe from 2000
 to 2025. *Nature Health*. https://doi.org/10.1038/s44360-026-00209-8. Data
-and code: https://doi.org/10.5281/zenodo.22228327
+and code: https://doi.org/10.5281/zenodo.22228326
 
 Dekker, T., Brouwer, R., Hofkes, M., Moeltner, K. (2011). The effect of risk
 context on the value of a statistical life: a Bayesian meta-model.
