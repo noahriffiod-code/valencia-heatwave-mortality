@@ -1,6 +1,9 @@
 # Heat-related mortality during the 2026 heatwaves in Valencia attributable to climate change
 
-Code and data for the mortality section of *[paper title]*, [authors], [journal, year].
+Code and data for the mortality section of
+*Attributing the economic cost of the summer 2026 heat waves in València to
+climate change*, by N. Riffiod, A. G. Fernández-Garza, D. Ávila-Velásquez,
+E. Gielen and M. Pulido-Velazquez (2026).
 
 The analysis estimates, for the city of Valencia (840,792 inhabitants, ages
 20 and over), the deaths attributable to heat during the three official AEMET
@@ -74,14 +77,14 @@ output/                            results (created by the scripts)
 |---|---|---|
 | `masselot2023/coefs.csv`, `vcov.csv`, `tmean_distribution.csv`, `metadata.csv` | Spline coefficients and covariance by city and age, temperature percentiles 1990-2019, city metadata (population structure, death rates, life expectancy) | Masselot and Gasparrini (2023), Zenodo [doi:10.5281/zenodo.10288665](https://doi.org/10.5281/zenodo.10288665), v2.0.0, unchanged (MD5 identical to the record) |
 | `masselot2023/era5_ES003C.csv` | Daily mean temperature 1990-2019, ERA5-Land aggregated over ES003C | Rows `URAU_CODE == "ES003C"` of `era5series.csv` in `additional_data.zip`, same record |
-| `era5land_openmeteo_raw.csv` | Daily mean temperature 1990-2026, ERA5-Land at the coordinates of ES003C in `metadata.csv`, local time | Open-Meteo archive API (Zippenfenig 2024), `models=era5_land`, `timezone=Europe/Madrid`, retrieved 9 November 2026 |
+| `era5land_openmeteo_raw.csv` | Daily mean temperature 1990-2026, ERA5-Land at the coordinates of ES003C in `metadata.csv`, local time | Open-Meteo archive API (Zippenfenig 2023), `models=era5_land`, `timezone=Europe/Madrid`, retrieved 9 November 2026 |
 | `era5land_valencia_calibrated.csv` | Same, calibrated on `era5_ES003C.csv` | `scripts/01_prepare_temperature.R` |
-| `momo/momo_valencia_province_*.csv` | Daily observed deaths, expected deaths, excess and deaths attributed to temperature, province of Valencia, by age group, to 30 September 2026 | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in Leon-Gomez et al. (2022) |
+| `momo/momo_valencia_province_*.csv` | Daily observed deaths, expected deaths, excess and deaths attributed to temperature, province of Valencia, by age group, to 30 September 2026 | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in León-Gómez et al. (2022) |
 | `heatwaves_aemet_2026.csv` | Dates of the 2026 heatwaves | AEMET, note of 9 September 2026, [link](https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026) |
-| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228327](https://doi.org/10.5281/zenodo.22228327), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
+| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
 
 Population of the city and the province on 1 January 2025: Real Decreto
-1117/2025. Monetary values: see `R/parameters.R` (Abellan Perpinan et al. 2023;
+1117/2025. Monetary values: see `R/parameters.R` (Abellán Perpiñán et al. 2023;
 Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
 
 ### Data sources and licences
@@ -92,12 +95,12 @@ Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
   for any use that may be made of the Copernicus information or data it
   contains. Weather data by [Open-Meteo.com](https://open-meteo.com/),
   licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- **MoMo**: Instituto de Salud Carlos III, Centro Nacional de Epidemiologia.
+- **MoMo**: Instituto de Salud Carlos III, Centro Nacional de Epidemiología.
   File names changed; content unchanged.
-- **AEMET**: (c) AEMET. Information prepared using, among others, data from
-  the Agencia Estatal de Meteorologia ([nota legal](https://www.aemet.es/es/nota_legal));
+- **AEMET**: © AEMET. Information prepared using, among others, data from
+  the Agencia Estatal de Meteorología ([nota legal](https://www.aemet.es/es/nota_legal));
   AEMET does not endorse this work.
-- `R/attrdl.R` (c) Antonio Gasparrini, from
+- `R/attrdl.R` © Antonio Gasparrini, from
   [github.com/gasparrini/2014_gasparrini_BMCmrm_Rcodedata](https://github.com/gasparrini/2014_gasparrini_BMCmrm_Rcodedata).
   `R/fhempel_main.R` by Antonio Gasparrini, GNU GPL v3, from
   [github.com/anavica/mcc_ccattr_NCC](https://github.com/anavica/mcc_ccattr_NCC).
@@ -172,14 +175,15 @@ See `CITATION.cff`.
 
 ## References
 
-Abellan Perpinan, J. M., Martinez Perez, J. E., Mendez Martinez, I., Pinto
-Prades, J. L., Sanchez Martinez, F. I. (2023). *Actualizacion del valor
-monetario de una vida estadistica en Espana*. Universidad de Murcia for the
-Direccion General de Trafico, published 12 March 2024.
+Abellán Perpiñán, J. M., Martínez Pérez, J. E., Méndez Martínez, I., Pinto
+Prades, J. L., Sánchez Martínez, F. I. (2023). *Actualización del valor
+monetario de una vida estadística en España*. Universidad de Murcia for the
+Dirección General de Tráfico, published 12 March 2024.
 https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/conoce_la_dgt/que-hacemos/conocimiento-e-investigacion/Actualizacion-del-valor-monetario-de-una-vida-estadistica-en-Espana.pdf
 
-AEMET (2026). Olas de calor 2026. Agencia Estatal de Meteorologia, note of
-9 September 2026. https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026
+AEMET (2026). España registra 61 días bajo ola de calor en 2026, más que en
+ningún otro año. Agencia Estatal de Meteorología, 9 September 2026.
+https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026
 
 Armstrong, B., Bell, M. L., de Sousa Zanotti Stagliorio Coelho, M., Guo,
 Y.-L. L., Guo, Y., Goodman, P., et al. (2017). Longer-term impact of high and low temperature on mortality: an
@@ -192,14 +196,14 @@ Raju, E., Theokritoff, E., Mistry, M., Gasparrini, A., Otto, F.,
 Vicedo-Cabrera, A. M., Konstantinoudis, G. (2026). Heat-related urban
 mortality attributable to human-induced climate change in Europe from 2000
 to 2025. *Nature Health*. https://doi.org/10.1038/s44360-026-00209-8. Data
-and code: https://doi.org/10.5281/zenodo.22228327
+and code: https://doi.org/10.5281/zenodo.22228326
 
 Dekker, T., Brouwer, R., Hofkes, M., Moeltner, K. (2011). The effect of risk
 context on the value of a statistical life: a Bayesian meta-model.
 *Environmental and Resource Economics*, 49(4), 597-624.
 https://doi.org/10.1007/s10640-011-9456-z
 
-Desaigues, B., Ami, D., Bartczak, A., Braun-Kohlova, M., Chilton, S.,
+Desaigues, B., Ami, D., Bartczak, A., Braun-Kohlová, M., Chilton, S.,
 Czajkowski, M., et al. (2011). Economic valuation of
 air pollution mortality: a 9-country contingent valuation survey of value
 of a life year (VOLY). *Ecological Indicators*, 11(3), 902-910.
@@ -219,9 +223,9 @@ valuation of temperature-related mortality attributed to urban heat
 islands in European cities. *Nature Communications*, 14, 7438.
 https://doi.org/10.1038/s41467-023-43135-z
 
-Leon-Gomez, I., Delgado Sanz, C., Larrauri, A. (2022). Implementacion de un
-nuevo modelo MoMo, para la estimacion de excesos de mortalidad por todas las
-causas y atribuibles a temperatura. *Boletin Epidemiologico Semanal*, 30(6),
+León-Gómez, I., Delgado Sanz, C., Larrauri, A. (2022). Implementación de un
+nuevo modelo MoMo, para la estimación de excesos de mortalidad por todas las
+causas y atribuibles a temperatura. *Boletín Epidemiológico Semanal*, 30(6),
 67-82. http://hdl.handle.net/20.500.12105/15506
 
 Masselot, P., Mistry, M., Vanoli, J., et al. (2023). Excess mortality
@@ -234,7 +238,7 @@ Masselot, P., Gasparrini, A. (2023). Temperature-related mortality
 exposure-response functions for 854 cities in Europe (v2.0.0). Zenodo.
 https://doi.org/10.5281/zenodo.10288665
 
-Munoz-Sabater, J., Dutra, E., Agusti-Panareda, A., et al. (2021). ERA5-Land:
+Muñoz-Sabater, J., Dutra, E., Agustí-Panareda, A., et al. (2021). ERA5-Land:
 a state-of-the-art global reanalysis dataset for land applications. *Earth
 System Science Data*, 13(9), 4349-4383. https://doi.org/10.5194/essd-13-4349-2021
 
@@ -243,5 +247,5 @@ heat-related mortality attributable to recent human-induced climate change.
 *Nature Climate Change*, 11, 492-500. https://doi.org/10.1038/s41558-021-01058-x.
 Code: https://github.com/anavica/mcc_ccattr_NCC
 
-Zippenfenig, P. (2024). Open-Meteo.com Weather API (v1.4.0). Zenodo.
-https://doi.org/10.5281/zenodo.14582479
+Zippenfenig, P. (2023). Open-Meteo.com Weather API. Zenodo.
+https://doi.org/10.5281/zenodo.7970649
