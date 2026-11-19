@@ -52,6 +52,8 @@ directory to the repository root) and run
 source("run_all.R")
 ```
 
+`scripts/00_delta_barnes.R` computes the attributable warming from the
+files of Barnes et al. (2026), which the four repositories share;
 `scripts/01_prepare_temperature.R` builds the temperature series;
 `scripts/02_mortality.R` computes deaths and costs and draws Figures 1
 and 2 of the paper (about 1 minute with 1,000 draws). Nothing is downloaded unless
@@ -61,10 +63,11 @@ retrieved again from Open-Meteo (requires `jsonlite`).
 ## Repository structure
 
 ```
-run_all.R                          runs scripts 01 and 02
+run_all.R                          runs scripts 00 to 02
 R/parameters.R                     parameters, file paths and sources
 R/attrdl.R                         Gasparrini and Leone (2014), unmodified
 R/fhempel_main.R                   Hempel et al. (2013) calibration, by A. Gasparrini, unmodified
+scripts/00_delta_barnes.R          attributable warming (delta) from the files of Barnes et al.
 scripts/01_prepare_temperature.R   ERA5-Land series on the scale of the curves
 scripts/02_mortality.R             attributable deaths, climate change, costs, Figures 1-2
 data/                              inputs (see below)
@@ -81,7 +84,9 @@ output/                            results (created by the scripts)
 | `era5land_valencia_calibrated.csv` | Same, calibrated on `era5_ES003C.csv` | `scripts/01_prepare_temperature.R` |
 | `momo/momo_valencia_province_*.csv` | Daily deaths, province of Valencia, by age group, to 30 September 2026 (only observed deaths are used; the files are kept as downloaded) | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in Leon-Gomez et al. (2022) |
 | `heatwaves_aemet_2026.csv` | Dates of the 2026 heatwaves | AEMET, note of 9 September 2026, [link](https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026) |
-| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
+| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Computed by `scripts/00_delta_barnes.R` from the two files below: city ES003C, row "Unweighted"; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - (G<sub>2025</sub> - 1.3) = 1.319167 degC |
+| `barnes2026/beta-pars_full-synthesis.rds` | Regression coefficients of monthly city temperature on smoothed GMST, 854 cities, June-August, with 95% bounds | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), unmodified (MD5 9095483384dd77b4a7b8275a970623ee) |
+| `barnes2026/gmst.txt` | Smoothed GISTEMP global mean surface temperature used by Barnes et al. | Same record, unmodified (MD5 de311aa0427c7073e66a244aecb0980a) |
 
 Population of the city on 1 January 2026 (provisional municipal register,
 Ajuntament de Valencia, 9 May 2026) and of the province on 1 April 2026 (INE,
