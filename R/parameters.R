@@ -67,11 +67,12 @@ params$files_momo <- c("20-44" = "momo_valencia_province_15-44.csv",
                        "65-74" = "momo_valencia_province_65-74.csv",
                        "75-84" = "momo_valencia_province_75-84.csv",
                        "85+"   = "momo_valencia_province_85plus.csv")
-params$file_momo_0_14 <- "momo_valencia_province_0-14.csv"   # MoMo comparison only
 
-# Population on 1 January 2025, Real Decreto 1117/2025 (BOE)
-params$pop_city     <- 840792
-params$pop_province <- 2758633
+# Population of the city on 1 January 2026, provisional municipal register
+# (Ajuntament de Valencia, 9 May 2026), and of the province on 1 April 2026
+# (INE, Estadistica Continua de Poblacion)
+params$pop_city     <- 858178
+params$pop_province <- 2815786
 
 # ---------------------------------------------------------------------------
 # 5. Uncertainty

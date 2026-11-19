@@ -1,11 +1,8 @@
 # Heat-related mortality during the 2026 heatwaves in Valencia attributable to climate change
 
-Code and data for the mortality section of
-*Attributing the economic cost of the summer 2026 heat waves in València to
-climate change*, by N. Riffiod, A. G. Fernández-Garza, D. Ávila-Velásquez,
-E. Gielen and M. Pulido-Velazquez (2026).
+Code and data for the mortality section of *Attributing the economic cost of the summer 2026 heat waves in València to climate change*, N. Riffiod, A.G. Fernández-Garza, D. Ávila-Velásquez, E. Gielen and M. Pulido-Velazquez (2026).
 
-The analysis estimates, for the city of Valencia (840,792 inhabitants, ages
+The analysis estimates, for the city of Valencia (858,178 inhabitants, ages
 20 and over), the deaths attributable to heat during the three official AEMET
 heatwaves of summer 2026 (20-27 June, 2-24 July, 28 July-20 August),
 the part of these deaths attributable to climate change, and their cost.
@@ -31,42 +28,48 @@ the part of these deaths attributable to climate change, and their cost.
 
 ## Main results (method B, ages 20+, deaths)
 
-| Wave | Dates | Heat-related | Excess over normal | Climate change [95% CI] |
-|---|---|---:|---:|---:|
-| 1 | 20-27 Jun | 12.6 | 10.8 | 10.7 |
-| 2 | 2-24 Jul | 69.5 | 50.9 | 48.1 |
-| 3 | 28 Jul-20 Aug | 76.8 | 49.8 | 52.1 |
-| Total | | 158.8 [140.6-177.3] | 111.5 [93.7-129.0] | 110.8 [75.5-137.5] |
+| Wave | Dates | Heat-related [95% CI] | Attributable to climate change [95% CI] |
+|---|---|---:|---:|
+| 1 | 20-27 Jun | 12.6 [10.6-14.6] | 10.7 [7.8-12.7] |
+| 2 | 2-24 Jul | 69.5 [60.8-77.3] | 48.0 [31.1-60.3] |
+| 3 | 28 Jul-20 Aug | 76.8 [67.4-85.1] | 52.1 [35.8-64.2] |
+| Total | | 158.8 [139.3-176.5] | 110.8 [75.3-136.8] |
 
 Climate change: 1,230 years of life lost; 210.6 million EUR
-[143.5-261.2] with the Spanish VSL. Method A: 122.3 deaths [82.9-151.6].
-Full tables are written to `output/`.
+[143.0-259.8] with the Spanish VSL. Method A: 124.9 deaths [84.3-154.2],
+237.3 million EUR. These are the values of the paper (Tables 5, 6 and 12,
+Figures 1 and 2). Full tables are written to `output/`.
 
 ## Running the code
 
-Requirements: R (tested with 4.3.3), packages `dlnm` (tested with 2.4.10)
-and `MASS`. Open `valencia_heatwave_mortality.Rproj` (or set the working
+Requirements: R and the packages `dlnm` and `MASS`. The results above were
+obtained with R 4.4.3, dlnm 2.4.10 and MASS 7.3-66. The 95% intervals come
+from 1,000 random draws (`set.seed(2026)`); another version of R or of its
+linear algebra library can change them in the last decimal. Open `valencia_heatwave_mortality.Rproj` (or set the working
 directory to the repository root) and run
 
 ```r
 source("run_all.R")
 ```
 
+`scripts/00_delta_barnes.R` computes the attributable warming from the
+files of Barnes et al. (2026), which the four repositories share;
 `scripts/01_prepare_temperature.R` builds the temperature series;
-`scripts/02_mortality.R` computes deaths and costs (about 1 minute with
-1,000 draws). Nothing is downloaded unless
+`scripts/02_mortality.R` computes deaths and costs and draws Figures 1
+and 2 of the paper (about 1 minute with 1,000 draws). Nothing is downloaded unless
 `data/era5land_openmeteo_raw.csv` is deleted, in which case the series is
 retrieved again from Open-Meteo (requires `jsonlite`).
 
 ## Repository structure
 
 ```
-run_all.R                          runs scripts 01 and 02
+run_all.R                          runs scripts 00 to 02
 R/parameters.R                     parameters, file paths and sources
 R/attrdl.R                         Gasparrini and Leone (2014), unmodified
 R/fhempel_main.R                   Hempel et al. (2013) calibration, by A. Gasparrini, unmodified
+scripts/00_delta_barnes.R          attributable warming (delta) from the files of Barnes et al.
 scripts/01_prepare_temperature.R   ERA5-Land series on the scale of the curves
-scripts/02_mortality.R             attributable deaths, climate change, costs
+scripts/02_mortality.R             attributable deaths, climate change, costs, Figures 1-2
 data/                              inputs (see below)
 output/                            results (created by the scripts)
 ```
@@ -79,12 +82,15 @@ output/                            results (created by the scripts)
 | `masselot2023/era5_ES003C.csv` | Daily mean temperature 1990-2019, ERA5-Land aggregated over ES003C | Rows `URAU_CODE == "ES003C"` of `era5series.csv` in `additional_data.zip`, same record |
 | `era5land_openmeteo_raw.csv` | Daily mean temperature 1990-2026, ERA5-Land at the coordinates of ES003C in `metadata.csv`, local time | Open-Meteo archive API (Zippenfenig 2023), `models=era5_land`, `timezone=Europe/Madrid`, retrieved 9 November 2026 |
 | `era5land_valencia_calibrated.csv` | Same, calibrated on `era5_ES003C.csv` | `scripts/01_prepare_temperature.R` |
-| `momo/momo_valencia_province_*.csv` | Daily observed deaths, expected deaths, excess and deaths attributed to temperature, province of Valencia, by age group, to 30 September 2026 | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in León-Gómez et al. (2022) |
+| `momo/momo_valencia_province_*.csv` | Daily deaths, province of Valencia, by age group, to 30 September 2026 (only observed deaths are used; the files are kept as downloaded) | MoMo, Instituto de Salud Carlos III ([momo.isciii.es](https://momo.isciii.es/panel_momo/)), daily data from 1 June 2015 to 30 September 2026; methodology in León-Gómez et al. (2022) |
 | `heatwaves_aemet_2026.csv` | Dates of the 2026 heatwaves | AEMET, note of 9 September 2026, [link](https://www.aemet.es/es/noticias/2026/09/olas_de_calor_2026) |
-| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), city ES003C, row "Unweighted" of `beta-pars_full-synthesis.rds`; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - G<sub>2025</sub> + 1.3 = 1.319 degC with G from `gmst.txt` of the same record |
+| `delta_barnes_2026_valencia.csv` | Attributable warming of mean temperature by month, 95% interval | Computed by `scripts/00_delta_barnes.R` from the two files below: city ES003C, row "Unweighted"; delta = beta x W<sub>2026</sub>, W<sub>2026</sub> = G<sub>2026</sub> - (G<sub>2025</sub> - 1.3) = 1.319167 degC |
+| `barnes2026/beta-pars_full-synthesis.rds` | Regression coefficients of monthly city temperature on smoothed GMST, 854 cities, June-August, with 95% bounds | Barnes et al. (2026), [doi:10.5281/zenodo.22228326](https://doi.org/10.5281/zenodo.22228326), unmodified (MD5 9095483384dd77b4a7b8275a970623ee) |
+| `barnes2026/gmst.txt` | Smoothed GISTEMP global mean surface temperature used by Barnes et al. | Same record, unmodified (MD5 de311aa0427c7073e66a244aecb0980a) |
 
-Population of the city and the province on 1 January 2025: Real Decreto
-1117/2025. Monetary values: see `R/parameters.R` (Abellán Perpiñán et al. 2023;
+Population of the city on 1 January 2026 (provisional municipal register,
+Ajuntament de València, 9 May 2026) and of the province on 1 April 2026 (INE,
+Estadística Continua de Población). Monetary values: see `R/parameters.R` (Abellán Perpiñán et al. 2023;
 Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
 
 ### Data sources and licences
@@ -132,16 +138,14 @@ Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
 6. **Same deaths in both worlds.** This is the convention of Vicedo-Cabrera
    et al. (2021) and Barnes et al. (2026). Scaling the deaths of the world
    without climate change by RR(T without CC)/RR(T) multiplies the result by
-   RR(T without CC); the script reports this sensitivity (+7.5% with the
-   series of 9 November 2026).
+   RR(T without CC); the script reports this sensitivity (+7.5%).
 7. **Attributable warming.** One delta per month (June, July, August),
    identical for all days and ages. Uncertainty: normal distribution
    matched to its 95% interval, one draw per simulation common to all months
    and waves. Coefficients are drawn independently by age group from their
    covariance matrices (1,000 draws).
-8. **Normal temperature** (second indicator): mean of 2016-2025 within
-   +/- 7 days of the same date. This indicator is our own; the cited papers
-   do not compute it.
+8. **Normal temperature** (Figure 1 only): mean of 2016-2025 within
+   +/- 7 days of the same date. It is not used in any result.
 9. **Mortality displacement.** Part of it is inside the 21-day window and
    it is not corrected further. Armstrong et al. (2017) find that most
    heat-related deaths in daily time-series analyses are brought forward by
