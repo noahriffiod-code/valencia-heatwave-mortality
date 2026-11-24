@@ -4,3 +4,8 @@
 .Renviron
 Rplots.pdf
 output/
+# Large Zenodo files downloaded by scripts/check_beta_barnes.R
+data/barnes2026/t2m-monthly_era5-land.csv
+data/barnes2026/t2m-monthly_eobs.csv
+data/barnes2026/cmip6.zip
+data/barnes2026/cmip6/

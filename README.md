@@ -54,7 +54,10 @@ source("run_all.R")
 
 `scripts/00_delta_barnes.R` computes the attributable warming from the
 files of Barnes et al. (2026), which the four repositories share;
-`scripts/01_prepare_temperature.R` builds the temperature series;
+`scripts/check_beta_barnes.R` (not run by `run_all.R`, about 105 MB
+downloaded from Zenodo) recomputes these beta with the regression, bootstrap
+and synthesis code of the authors and checks that they equal the published
+values; `scripts/01_prepare_temperature.R` builds the temperature series;
 `scripts/02_mortality.R` computes deaths and costs and draws Figures 1
 and 2 of the paper (about 1 minute with 1,000 draws). Nothing is downloaded unless
 `data/era5land_openmeteo_raw.csv` is deleted, in which case the series is
@@ -68,6 +71,7 @@ R/parameters.R                     parameters, file paths and sources
 R/attrdl.R                         Gasparrini and Leone (2014), unmodified
 R/fhempel_main.R                   Hempel et al. (2013) calibration, by A. Gasparrini, unmodified
 scripts/00_delta_barnes.R          attributable warming (delta) from the files of Barnes et al.
+scripts/check_beta_barnes.R        check: recomputes the beta of Valencia with the code of Barnes et al.
 scripts/01_prepare_temperature.R   ERA5-Land series on the scale of the curves
 scripts/02_mortality.R             attributable deaths, climate change, costs, Figures 1-2
 data/                              inputs (see below)
