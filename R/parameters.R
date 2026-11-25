@@ -81,16 +81,24 @@ params$nsim <- 1000
 params$seed <- 2026
 
 # ---------------------------------------------------------------------------
-# 6. Monetary values (EUR)
+# 6. Monetary values (EUR of 2026)
 # ---------------------------------------------------------------------------
+# Values of earlier years are converted to 2026 euros with the Spanish
+# consumer price index (INE, base 2025 = 100), annual means: 84.4 in 2021,
+# 94.8 in 2023; 103.53 in 2026, i.e. the 2025 level raised by the mean
+# annual rate of January-October 2026 (3.53%).
+params$cpi <- c("2021" = 84.4, "2023" = 94.8, "2026" = 103.53)
+to_eur2026 <- function(x, year) x * params$cpi[["2026"]] / params$cpi[[as.character(year)]]
+
 # Value of a statistical life for Spain: Direccion General de Trafico and
 # Universidad de Murcia, report dated 2023 (published March 2024); the price
-# year is not stated, taken as 2023.
-params$vsl_spain <- 1.9e6
+# year is not stated, taken as 2023. 1.9 million EUR of 2023.
+params$vsl_spain <- to_eur2026(1.9e6, 2023)
 # Risk-context factor of 1.8 (Dekker et al. 2011), sensitivity only.
 params$vsl_factor <- 1.8
-# European VSL and VOLY used by Huang et al. (2023), 2021 euros; the VOLY
-# comes from Desaigues et al. (2011), range 29,000-116,000.
-params$vsl_europe <- 3.91e6
-params$voly       <- 46000
-params$voly_high  <- 116000
+# European VSL and VOLY used by Huang et al. (2023), 2021 euros: 3.91 million
+# and 46,000; the VOLY comes from Desaigues et al. (2011), range
+# 29,000-116,000.
+params$vsl_europe <- to_eur2026(3.91e6, 2021)
+params$voly       <- to_eur2026(46000, 2021)
+params$voly_high  <- to_eur2026(116000, 2021)

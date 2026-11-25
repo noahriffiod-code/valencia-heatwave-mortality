@@ -1,6 +1,6 @@
 # Heat-related mortality during the 2026 heatwaves in Valencia attributable to climate change
 
-Code and data for the mortality section of *Attributing the economic cost of the summer 2026 heat waves in València to climate change*, N. Riffiod, A.G. Fernández-Garza, D. Ávila-Velásquez, E. Gielen and M. Pulido-Velazquez (2026).
+Code and data for the mortality section of *Attributing the economic cost of the summer 2026 heatwaves in Valencia to climate change*, N. Riffiod, A.G. Fernández-Garza, D. Ávila-Velásquez, E. Gielen and M. Pulido-Velazquez (2026).
 
 The analysis estimates, for the city of Valencia (858,178 inhabitants, ages
 20 and over), the deaths attributable to heat during the three official AEMET
@@ -30,20 +30,22 @@ the part of these deaths attributable to climate change, and their cost.
 
 | Wave | Dates | Heat-related [95% CI] | Attributable to climate change [95% CI] |
 |---|---|---:|---:|
-| 1 | 20-27 Jun | 12.6 [10.6-14.6] | 10.7 [7.8-12.7] |
-| 2 | 2-24 Jul | 69.5 [60.8-77.3] | 48.0 [31.1-60.3] |
-| 3 | 28 Jul-20 Aug | 76.8 [67.4-85.1] | 52.1 [35.8-64.2] |
-| Total | | 158.8 [139.3-176.5] | 110.8 [75.3-136.8] |
+| 1 | 20-27 Jun | 12.6 [10.6-14.7] | 10.7 [7.8-12.7] |
+| 2 | 2-24 Jul | 69.5 [61.5-77.6] | 48.0 [31.0-60.4] |
+| 3 | 28 Jul-20 Aug | 76.8 [68.0-85.1] | 52.1 [36.0-64.4] |
+| Total | | 158.8 [140.6-177.3] | 110.8 [75.5-137.5] |
 
-Climate change: 1,230 years of life lost; 210.6 million EUR
-[143.0-259.8] with the Spanish VSL. Method A: 124.9 deaths [84.3-154.2],
-237.3 million EUR. These are the values of the paper (Tables 5, 6 and 12,
+Climate change: 1,230 years of life lost; 229.9 million EUR of 2026
+[156.7-285.3] with the Spanish VSL. Method A: 124.9 deaths [84.6-154.7],
+259.1 million EUR. These are the values of the paper (Tables 5, 6 and 12,
 Figures 1 and 2). Full tables are written to `output/`.
 
 ## Running the code
 
 Requirements: R and the packages `dlnm` and `MASS`. The results above were
-obtained with R 4.4.3, dlnm 2.4.10 and MASS 7.3-66. The 95% intervals come
+obtained with R 4.3.3, dlnm 2.4.7 and MASS 7.3-60.0.1; with R 4.4.3,
+dlnm 2.4.10 and MASS 7.3-66 the deaths are the same and the intervals differ
+by a few tenths (110.8 [75.3-136.8]). The 95% intervals come
 from 1,000 random draws (`set.seed(2026)`); another version of R or of its
 linear algebra library can change them in the last decimal. Open `valencia_heatwave_mortality.Rproj` (or set the working
 directory to the repository root) and run
@@ -157,8 +159,9 @@ Dekker et al. 2011; Huang et al. 2023; Desaigues et al. 2011).
    age group and are probably overstated for frail people.
 10. **Years of life lost**: remaining life expectancy at the mean age at
     death of each group (Masselot et al. 2023; Huang et al. 2023).
-    Monetary values are in euros of different years (Spanish VSL about 2023,
-    European values 2021) and are not converted to 2026 euros.
+    Monetary values are in 2026 euros: the Spanish VSL (about 2023 prices)
+    and the European VSL and VOLY (2021 euros) are converted with the
+    Spanish consumer price index of the INE (`R/parameters.R`).
 11. **Heatwaves.** Official AEMET waves for mainland Spain and the Balearic
     Islands (at least 10% of reference stations above the 95th percentile of
     July-August Tmax 1971-2000 for at least 3 consecutive days). Wave 4
