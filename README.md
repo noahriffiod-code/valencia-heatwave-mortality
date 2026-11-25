@@ -43,9 +43,7 @@ Figures 1 and 2). Full tables are written to `output/`.
 ## Running the code
 
 Requirements: R and the packages `dlnm` and `MASS`. The results above were
-obtained with R 4.3.3, dlnm 2.4.7 and MASS 7.3-60.0.1; with R 4.4.3,
-dlnm 2.4.10 and MASS 7.3-66 the deaths are the same and the intervals differ
-by a few tenths (110.8 [75.3-136.8]). The 95% intervals come
+obtained with R 4.3.3, dlnm 2.4.7 and MASS 7.3-60.0.1. The 95% intervals come
 from 1,000 random draws (`set.seed(2026)`); another version of R or of its
 linear algebra library can change them in the last decimal. Open `valencia_heatwave_mortality.Rproj` (or set the working
 directory to the repository root) and run
