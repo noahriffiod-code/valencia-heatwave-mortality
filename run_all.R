@@ -8,3 +8,4 @@
 source("scripts/00_delta_barnes.R")
 source("scripts/01_prepare_temperature.R")
 source("scripts/02_mortality.R")
+source("scripts/03_figures.R")   # Figures 3-4 need the other three repositories, see README
