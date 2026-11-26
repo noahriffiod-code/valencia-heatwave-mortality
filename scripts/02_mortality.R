@@ -19,8 +19,8 @@
 #   heat     deaths attributable to temperatures above the MMT;
 #   cc       heat deaths minus those without climate change.
 #
-# Results are printed and written to output/, with Figures 1 and 2 of the
-# paper.
+# Results are printed and written to output/; the figures are drawn by
+# scripts/03_figures.R.
 
 library(dlnm)
 library(MASS)
@@ -292,33 +292,3 @@ print(round(by_age, 2))
 cat("\nScaled deaths in the world without climate change (waves with a delta)\n")
 print(round(scaling, 1))
 
-
-# ---------------------------------------------------------------------------
-# 6. Figures 1 and 2 of the paper
-# ---------------------------------------------------------------------------
-# Figure 1: daily mean temperature on heatwave days, observed, normal
-# 2016-2025 and without climate change.
-png(output_path("figure1_temperatures.png"), width = 2400, height = 950, res = 250)
-par(mfrow = c(1, nrow(waves)), mar = c(3, 2, 2, 0.5), oma = c(2, 2.5, 0, 0))
-for (v in wave_id) {
-  i <- hw[hw_v == v]
-  plot(win$date[i], t_obs[i], type = "o", pch = 16, cex = 0.5, ylim = c(22, 34),
-       xlab = "", ylab = "", main = paste("Heat wave", sub("V", "", v)))
-  lines(win$date[i], t_normal[i], col = "grey55", lwd = 2)
-  if (cc_ok[v]) lines(win$date[i], t_nocc[i], type = "o", pch = 16, cex = 0.5, col = "steelblue")
-}
-mtext("Daily mean temperature (degC)", side = 2, outer = TRUE, line = 1)
-legend("bottomright", c("Observed", "Normal 2016-2025", "Without climate change"),
-       col = c("black", "grey55", "steelblue"), lwd = 2, bty = "n", cex = 0.8)
-invisible(dev.off())
-
-# Figure 2: (a) deaths attributable to climate change per heatwave day,
-# (b) by age group over the three waves (method B).
-png(output_path("figure2_deaths.png"), width = 2400, height = 950, res = 250)
-par(mfrow = c(1, 2), mar = c(4, 4.5, 2, 0.5))
-barplot(daily$cc_B, names.arg = format(daily$date, "%d/%m"), las = 2, cex.names = 0.5,
-        col = "firebrick", border = NA, ylab = "Deaths per day", main = "a")
-b <- barplot(by_age["cc_deaths_B", ], col = "firebrick", border = NA, ylim = c(0, 62),
-             xlab = "Age group (years)", ylab = "Deaths", main = "b")
-text(b, by_age["cc_deaths_B", ] + 3, sprintf("%.1f", by_age["cc_deaths_B", ]), cex = 0.8)
-invisible(dev.off())

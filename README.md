@@ -55,21 +55,43 @@ source("run_all.R")
 `scripts/00_delta_barnes.R` computes the attributable warming from the
 files of Barnes et al. (2026), which the four repositories share;
 `scripts/01_prepare_temperature.R` builds the temperature series;
-`scripts/02_mortality.R` computes deaths and costs and draws Figures 1
-and 2 of the paper (about 1 minute with 1,000 draws). Nothing is downloaded unless
+`scripts/02_mortality.R` computes deaths and costs (about 1 minute with
+1,000 draws); `scripts/03_figures.R` draws Figures 1 to 4 of the paper from
+the result files in `output/`. Nothing is downloaded unless
 `data/era5land_openmeteo_raw.csv` is deleted, in which case the series is
 retrieved again from Open-Meteo (requires `jsonlite`).
+
+### Figures
+
+Figures 1 and 2 use only this repository. Figures 3 and 4 combine the four
+channels of the paper, so they read the result files of the three other
+repositories, which must be cloned next to this one and run first:
+
+```
+valencia-heatwave-mortality/      this repository
+valencia-heatwave-tourism/        run_all.R   -> output/tourism_total_by_wave.csv
+valencia-heatwave-outdoor/        labour_productivity.R -> output/labour_productivity_results.csv
+valencia-heatwave-electricity/    electricity.R -> output/electricity_by_wave.csv
+```
+
+If one of these files is missing, Figures 3 and 4 are skipped with a
+message. The figures are written to `output/figure1_temperatures.png`,
+`figure2_deaths.png`, `figure3_cost_by_wave.png` and
+`figure4_valuation.png` (300 dpi). The labels contain the characters
+degree, euro and delta: run R in a UTF-8 locale (the default on recent
+Windows, macOS and Linux systems).
 
 ## Repository structure
 
 ```
-run_all.R                          runs scripts 00 to 02
+run_all.R                          runs scripts 00 to 03
 R/parameters.R                     parameters, file paths and sources
 R/attrdl.R                         Gasparrini and Leone (2014), unmodified
 R/fhempel_main.R                   Hempel et al. (2013) calibration, by A. Gasparrini, unmodified
 scripts/00_delta_barnes.R          attributable warming (delta) from the files of Barnes et al.
 scripts/01_prepare_temperature.R   ERA5-Land series on the scale of the curves
-scripts/02_mortality.R             attributable deaths, climate change, costs, Figures 1-2
+scripts/02_mortality.R             attributable deaths, climate change, costs
+scripts/03_figures.R               Figures 1-4 of the paper (base R graphics)
 data/                              inputs (see below)
 output/                            results (created by the scripts)
 ```
